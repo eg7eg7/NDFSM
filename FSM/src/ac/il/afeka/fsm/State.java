@@ -14,6 +14,8 @@ public abstract class State implements Comparable<State> {
 	public abstract String toString(); 
 	
 	public abstract String encode();
+	
+	public abstract int getId();
  
 	static public void prettyPrintStateSet(Collection<State> states, PrintStream out) {
 

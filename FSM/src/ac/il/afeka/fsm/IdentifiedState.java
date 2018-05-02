@@ -66,4 +66,9 @@ public class IdentifiedState extends State {
 	public int compareTo(State other) {
 		return id.compareTo(((IdentifiedState)other).id);
 	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
 }
