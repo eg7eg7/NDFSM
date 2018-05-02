@@ -1,8 +1,13 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
 import ac.il.afeka.Submission.Submission;
+import ac.il.afeka.fsm.Alphabet;
 import ac.il.afeka.fsm.DFSM;
+import ac.il.afeka.fsm.NDFSM;
 
 public class Main implements Submission, Assignment3 {
 
@@ -13,8 +18,15 @@ public class Main implements Submission, Assignment3 {
 
 	@Override
 	public DFSM convert(String aNDFSMencoding) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return new NDFSM(aNDFSMencoding).toDFSM();
 	}
 
+	public void main(int args[]) throws FileNotFoundException, Exception
+	{
+		File outputFile = new File("NDFSM 2 DFSM Exercise.txt");
+		PrintStream fileStream = new PrintStream(outputFile);
+		String aNDFSMencoding = "0 1 2 3 4 5/0, a, 2;0, b, 3;0, " + Alphabet.EPSILON + ", q;1, a, 2;1, b, 3;1, a, 4;2, a, 2;2, b, 3;2, b, 5;3, " + Alphabet.EPSILON + ", 0;4, a, 1;4, a, 4;4, b, 5;5, a, 4/0/2 5";
+		convert(aNDFSMencoding).prettyPrint(fileStream);
+		fileStream.close();
+	}
 }
