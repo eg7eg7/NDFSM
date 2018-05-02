@@ -273,7 +273,6 @@ public class NDFSM {
 		todo.push(initialState);
 		canonicStates.put(initialState, new IdentifiedState(free));
 		free++;
-		
 		while (!todo.isEmpty()) {
 			State top = todo.pop();
 			for(Character symbol : alphabetAndEpsilon) {
