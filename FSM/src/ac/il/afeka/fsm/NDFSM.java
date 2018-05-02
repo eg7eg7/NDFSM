@@ -305,6 +305,14 @@ public class NDFSM {
 	}
 	
 	public DFSM toDFSM() {
-		return null;
+		/*Transforms NDFSM to canonic form before converting*/
+		toCanonicForm();
+		Set<State> newStates = new HashSet<>();
+		Set<Transition> newTransitions= new HashSet<>();
+		Set<State> newAcceptingStates = new HashSet<>();
+		State newInitialState=new State();
+		
+		return new DFSM(newStates, this.alphabet, newTransitions, newInitialState, newAcceptingStates);
+		/*new DFSM(Set<State> states, Alphabet alphabet, Set<Transition> transitions, State initialState,Set<State> acceptingStates)*/
 	}
 }
