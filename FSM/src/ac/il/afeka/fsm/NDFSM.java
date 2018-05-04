@@ -354,8 +354,13 @@ public class NDFSM {
 
 		Map<Integer, Set<State>> newStateGroups = new HashMap<>();
 		CalculateEpsTransitions();
-		int newState = 0;
-		// TODO
+		
+		for (State s : eps(initialState.getId())) {
+			Set<State> temp = new HashSet<>();
+			for (Character alphabetChar : this.alphabet) {
+				temp.addAll(transitions.at(s, alphabetChar));
+			}
+		}
 
 		try {
 			return new DFSM(newStates, this.alphabet, newTransitions, newInitialState, newAcceptingStates);
@@ -370,13 +375,36 @@ public class NDFSM {
 	}
 
 	private void CalculateEpsTransitions() {
-		/*transition is of class TransitionRelation, which returns all states from state s with symbol epsilon*/
-		for (State s : states) {
-			Set<State> states = transitions.at(s, Alphabet.EPSILON);
-			states.add(s);
-			AddEps(s.getId(),states);
+		/*
+		 * transition is of class TransitionRelation, which returns all states from
+		 * state s with symbol epsilon
+		 */
+		
+		for(State s:states)
+		{
+			AddEps(s.getId(), calculateEps(s));
 			System.out.println(eps(s.getId()));
 		}
+
+	}
+
+	private Set<State> calculateEps(State s) {
+		Set<State> epsStates = new HashSet<>();
+		Set<State> prevStates;
+		boolean finished = false;
+		epsStates.add(s);
+		
+		do {
+			prevStates = epsStates;
+			for(State state:epsStates)
+			{
+				epsStates.addAll(transitions.at(state, Alphabet.EPSILON));
+			}
+			if(prevStates.equals(epsStates))
+				finished = true;
+			} while (!finished);
+		
+		return epsStates;
 	}
 
 	private Set<State> eps(int id) {
