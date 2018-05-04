@@ -345,8 +345,6 @@ public class NDFSM {
 	}
 
 	public DFSM toDFSM() {
-		/* Transforms NDFSM to canonic form before converting */
-		toCanonicForm();
 		ArrayList<State> newStates = new ArrayList<>();
 		Set<Transition> newTransitions = new HashSet<>();
 		ArrayList<State> newAcceptingStates = new ArrayList<>();
@@ -355,45 +353,50 @@ public class NDFSM {
 		Map<Integer, Set<State>> newStateGroups = new HashMap<>();
 		CalculateEpsTransitions();
 		int nextStateCounter = 0;
-		
+		//initial state is the group of states epsilon(initialState)
 		newInitialState = new IdentifiedState(nextStateCounter);
 		newStates.add(newInitialState);
 		newStateGroups.put(nextStateCounter++, eps(initialState.getId()));
+		
+		//this loop iterates over all groups of different states, with all the alphabets to build transitions from group to group
 		for (int i = 0; i < nextStateCounter; i++) {
-			
+
 			Set<State> currentGroup = newStateGroups.get(i);
-			
-				for (Character alphabetChar : this.alphabet) 
-				{
+
+			for (Character alphabetChar : this.alphabet) {
 				Set<State> nextGroup = new HashSet<>();
-				
-					for (State s : currentGroup) 
-					{
-						nextGroup.addAll(transitions.at(s, alphabetChar));
-						
-					}
-					nextGroup = groupSetWithEps(nextGroup);
-					
-					if(!newStateGroups.containsValue(nextGroup))
-					{
-						newStates.add(new IdentifiedState(nextStateCounter));
-						newStateGroups.put(nextStateCounter,nextGroup);
-						
-						nextStateCounter++;
-					}
-					
-					newTransitions.add(new Transition(newStates.get(i), alphabetChar, newStates.get(getSetIndex(nextGroup, newStateGroups))));
-				
+				//for each state in the group, checks transition group with the alphabet
+				for (State s : currentGroup) {
+					nextGroup.addAll(transitions.at(s, alphabetChar));
+
 				}
 				
+				//add epsilon transition to group
+				nextGroup = groupSetWithEps(nextGroup);
 				
+				if (!newStateGroups.containsValue(nextGroup)) {
+					//if group does not already exist in the set, add it 
+					//and create a new state for the DFSM
+					newStates.add(new IdentifiedState(nextStateCounter));
+					newStateGroups.put(nextStateCounter, nextGroup);
+
+					//next unique group will be assigned the following id
+					nextStateCounter++;
+				}
+				//create transition with FromState(represented by group with id i), with char from alphabet, toState(represented by nextGroup, id retrieved in function)
+				newTransitions.add(new Transition(newStates.get(i), alphabetChar,
+						newStates.get(getSetIndex(nextGroup, newStateGroups))));
+			}
 		}
-		for(int i=0;i<nextStateCounter;i++)
-			if(SetIfGroupIsAccepting(newStateGroups.get(i)))
+		//checks which of the new states is accepting by checking if each of the unique groups includes an accepting state
+		//sets the DFSM state to accepting if yes
+		for (int i = 0; i < nextStateCounter; i++)
+			if (SetIfGroupIsAccepting(newStateGroups.get(i)))
 				newAcceptingStates.add(newStates.get(i));
-			try {
-			
-			return new DFSM(new HashSet<State>(newStates), this.alphabet, newTransitions, newInitialState, new HashSet<State>(newAcceptingStates));
+		try {
+
+			return new DFSM(new HashSet<State>(newStates), this.alphabet, newTransitions, newInitialState,
+					new HashSet<State>(newAcceptingStates));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -405,12 +408,13 @@ public class NDFSM {
 	}
 
 	private int getSetIndex(Set<State> currentSet, Map<Integer, Set<State>> allSets) {
-		/*value is ensured to be contained in the set thus no need to return a value if not found
+		/*
+		 * value is ensured to be contained in the set thus no need to return a value if
+		 * not found
 		 * 
-		 * */
-		for(Integer index:allSets.keySet())
-		{
-			if(allSets.get(index).equals(currentSet))
+		 */
+		for (Integer index : allSets.keySet()) {
+			if (allSets.get(index).equals(currentSet))
 				return index;
 		}
 		return 0;
@@ -418,12 +422,10 @@ public class NDFSM {
 
 	private boolean SetIfGroupIsAccepting(Set<State> set) {
 		/*
-		 * checks if a group of states contains an accepting state
-		 * return true if yes
-		 * */
-		for(State s:acceptingStates)
-		{
-			if(set.contains(s))
+		 * checks if a group of states contains an accepting state return true if yes
+		 */
+		for (State s : acceptingStates) {
+			if (set.contains(s))
 				return true;
 		}
 		return false;
@@ -432,7 +434,7 @@ public class NDFSM {
 	private Set<State> groupSetWithEps(Set<State> set) {
 		/*
 		 * method adds all epsilon transitions from a state set
-		 * */
+		 */
 		Set<State> newSet = new HashSet<>();
 		newSet.addAll(set);
 		for (State s : set) {
@@ -454,12 +456,11 @@ public class NDFSM {
 	}
 
 	private Set<State> calculateEps(State s) {
-		//for a given state, method calculates all epsilon transitions possible
-		
+		// for a given state, method calculates all epsilon transitions possible
+
 		Set<State> set = new HashSet<>();
 		set.add(s);
-		for(State t:transitions.at(s, Alphabet.EPSILON))
-		{
+		for (State t : transitions.at(s, Alphabet.EPSILON)) {
 			set.add(t);
 			set.addAll(calculateEps(t));
 		}
