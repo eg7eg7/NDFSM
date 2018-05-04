@@ -454,21 +454,16 @@ public class NDFSM {
 	}
 
 	private Set<State> calculateEps(State s) {
-		Set<State> epsStates = new HashSet<>();
-		Set<State> prevStates;
-		boolean finished = false;
-		epsStates.add(s);
-
-		do {
-			prevStates = epsStates;
-			for (State state : epsStates) {
-				epsStates.addAll(transitions.at(state, Alphabet.EPSILON));
-			}
-			if (prevStates.equals(epsStates))
-				finished = true;
-		} while (!finished);
-
-		return epsStates;
+		//for a given state, method calculates all epsilon transitions possible
+		
+		Set<State> set = new HashSet<>();
+		set.add(s);
+		for(State t:transitions.at(s, Alphabet.EPSILON))
+		{
+			set.add(t);
+			set.addAll(calculateEps(t));
+		}
+		return set;
 	}
 
 	private Set<State> eps(int id) {

@@ -18,13 +18,13 @@ public class SubmitMain implements Submission, Assignment3 {
 	public DFSM convert(String aNDFSMencoding) throws Exception {
 		NDFSM ndfsm = new NDFSM(aNDFSMencoding);
 		DFSM dfsm_converted_from_ndfsm = ndfsm.toDFSM();
-		
-		PrintStream fileStream = new PrintStream("DFSM Converted from NDFSM.txt");
+		String filePath = "DFSM Converted from NDFSM.txt";
+		PrintStream fileStream = new PrintStream(filePath);
 		dfsm_converted_from_ndfsm.prettyPrint(fileStream);
 		fileStream.println("\nAfter DFSM minimization :\n");
 		dfsm_converted_from_ndfsm.minimize().prettyPrint(fileStream);
 		fileStream.close();
-		
+		System.out.println("NDFSM encoding :\n" + aNDFSMencoding + "\nConverted NDFSM to DFSM\n\ncheck File to view conversion (" + filePath + ")");
 		//returns non-minimized DFSM
 		return dfsm_converted_from_ndfsm;
 	}
