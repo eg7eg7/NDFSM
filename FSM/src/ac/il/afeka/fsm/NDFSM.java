@@ -347,23 +347,56 @@ public class NDFSM {
 	public DFSM toDFSM() {
 		/* Transforms NDFSM to canonic form before converting */
 		toCanonicForm();
-		Set<State> newStates = new HashSet<>();
+		
+		ArrayList<State> newStates = new ArrayList<>();
 		Set<Transition> newTransitions = new HashSet<>();
-		Set<State> newAcceptingStates = new HashSet<>();
-		State newInitialState = new IdentifiedState(-1);
+		ArrayList<State> newAcceptingStates = new ArrayList<>();
+		State newInitialState;
 
 		Map<Integer, Set<State>> newStateGroups = new HashMap<>();
 		CalculateEpsTransitions();
+		int nextStateCounter = 0;
 		
-		for (State s : eps(initialState.getId())) {
-			Set<State> temp = new HashSet<>();
-			for (Character alphabetChar : this.alphabet) {
-				temp.addAll(transitions.at(s, alphabetChar));
-			}
+		newInitialState = new IdentifiedState(nextStateCounter);
+		newStates.add(newInitialState);
+		newStateGroups.put(nextStateCounter++, eps(initialState.getId()));
+		
+		for (int i = 0; i < nextStateCounter; i++) {
+			
+			
+			Set<State> currentGroup = newStateGroups.get(i);
+			
+			
+				for (Character alphabetChar : this.alphabet) 
+				{
+				Set<State> nextGroup = new HashSet<>();
+				
+					for (State s : currentGroup) 
+					{
+						nextGroup.addAll(transitions.at(s, alphabetChar));
+					}
+				
+					if(!newStateGroups.containsValue(nextGroup))
+					{
+						newStates.add(new IdentifiedState(nextStateCounter));
+						newStateGroups.put(nextStateCounter,groupSetWithEps(nextGroup));
+						
+						nextStateCounter++;
+					}
+					
+					//TODO Only need to take care of transitions!!
+				
+				
+				}
+				
+				
 		}
-
-		try {
-			return new DFSM(newStates, this.alphabet, newTransitions, newInitialState, newAcceptingStates);
+		for(int i=0;i<nextStateCounter;i++)
+			if(SetIfGroupIsAccepting(newStateGroups.get(i)))
+				newAcceptingStates.add(newStates.get(i));
+			try {
+			
+			return new DFSM(new HashSet<State>(newStates), this.alphabet, newTransitions, newInitialState, new HashSet<State>(newAcceptingStates));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -374,16 +407,30 @@ public class NDFSM {
 		 */
 	}
 
+	private boolean SetIfGroupIsAccepting(Set<State> set) {
+		for(State s:acceptingStates)
+		{
+			if(set.contains(s))
+				return true;
+		}
+		return false;
+	}
+
+	private Set<State> groupSetWithEps(Set<State> set) {
+		for (State s : set) {
+			set.addAll(eps(s.getId()));
+		}
+		return set;
+	}
+
 	private void CalculateEpsTransitions() {
 		/*
 		 * transition is of class TransitionRelation, which returns all states from
 		 * state s with symbol epsilon
 		 */
-		
-		for(State s:states)
-		{
+
+		for (State s : states) {
 			AddEps(s.getId(), calculateEps(s));
-			System.out.println(eps(s.getId()));
 		}
 
 	}
@@ -393,17 +440,16 @@ public class NDFSM {
 		Set<State> prevStates;
 		boolean finished = false;
 		epsStates.add(s);
-		
+
 		do {
 			prevStates = epsStates;
-			for(State state:epsStates)
-			{
+			for (State state : epsStates) {
 				epsStates.addAll(transitions.at(state, Alphabet.EPSILON));
 			}
-			if(prevStates.equals(epsStates))
+			if (prevStates.equals(epsStates))
 				finished = true;
-			} while (!finished);
-		
+		} while (!finished);
+
 		return epsStates;
 	}
 
