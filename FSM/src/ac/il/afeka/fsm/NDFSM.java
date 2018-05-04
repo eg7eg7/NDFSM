@@ -384,8 +384,7 @@ public class NDFSM {
 						nextStateCounter++;
 					}
 					
-					//TODO Only need to take care of transitions!!
-				
+					newTransitions.add(new Transition(newStates.get(i), alphabetChar, newStates.get(getSetIndex(nextGroup, newStateGroups))));
 				
 				}
 				
@@ -407,7 +406,23 @@ public class NDFSM {
 		 */
 	}
 
+	private int getSetIndex(Set<State> currentSet, Map<Integer, Set<State>> allSets) {
+		/*value is ensured to be contained in the set thus no need to return a value if not found
+		 * 
+		 * */
+		for(Integer index:allSets.keySet())
+		{
+			if(allSets.get(index).equals(currentSet))
+				return index;
+		}
+		return 0;
+	}
+
 	private boolean SetIfGroupIsAccepting(Set<State> set) {
+		/*
+		 * checks if a group of states contains an accepting state
+		 * return true if yes
+		 * */
 		for(State s:acceptingStates)
 		{
 			if(set.contains(s))
@@ -417,10 +432,15 @@ public class NDFSM {
 	}
 
 	private Set<State> groupSetWithEps(Set<State> set) {
+		/*
+		 * method adds all epsilon transitions from a state set
+		 * */
+		Set<State> newSet = new HashSet<>();
+		newSet.addAll(set);
 		for (State s : set) {
-			set.addAll(eps(s.getId()));
+			newSet.addAll(eps(s.getId()));
 		}
-		return set;
+		return newSet;
 	}
 
 	private void CalculateEpsTransitions() {
