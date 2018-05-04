@@ -372,7 +372,10 @@ public class NDFSM {
 	private void CalculateEpsTransitions() {
 		/*transition is of class TransitionRelation, which returns all states from state s with symbol epsilon*/
 		for (State s : states) {
-				AddEps(s.getId(),transitions.at(s, Alphabet.EPSILON));
+			Set<State> states = transitions.at(s, Alphabet.EPSILON);
+			states.add(s);
+			AddEps(s.getId(),states);
+			System.out.println(eps(s.getId()));
 		}
 	}
 
