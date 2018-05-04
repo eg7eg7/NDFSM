@@ -21,8 +21,11 @@ public class SubmitMain implements Submission, Assignment3 {
 		
 		PrintStream fileStream = new PrintStream("DFSM Converted from NDFSM.txt");
 		dfsm_converted_from_ndfsm.prettyPrint(fileStream);
+		fileStream.println("\nAfter DFSM minimization :\n");
+		dfsm_converted_from_ndfsm.minimize().prettyPrint(fileStream);
 		fileStream.close();
 		
+		//returns non-minimized DFSM
 		return dfsm_converted_from_ndfsm;
 	}
 
