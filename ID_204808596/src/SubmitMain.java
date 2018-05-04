@@ -32,9 +32,8 @@ public class SubmitMain implements Submission, Assignment3 {
 
 	public static void main(String[] args) throws FileNotFoundException, Exception {
 		SubmitMain submitExample = new SubmitMain();
-		DFSM dfsm;
 		String aNDFSMencoding = "0 1 2 3 4 5/a b/0, a, 2;0, b, 3;0,, 1;1, a, 2;1, b, 3;1, a, 4;2, a, 2;2, b, 3;2, b, 5;3,, 0;4, a, 1;4, a, 4;4, b, 5;5, a, 4/0/2 5";
-		dfsm = submitExample.convert(aNDFSMencoding);
+		submitExample.convert(aNDFSMencoding);
 
 	}
 }
