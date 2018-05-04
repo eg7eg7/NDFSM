@@ -347,7 +347,6 @@ public class NDFSM {
 	public DFSM toDFSM() {
 		/* Transforms NDFSM to canonic form before converting */
 		toCanonicForm();
-		
 		ArrayList<State> newStates = new ArrayList<>();
 		Set<Transition> newTransitions = new HashSet<>();
 		ArrayList<State> newAcceptingStates = new ArrayList<>();
@@ -360,12 +359,9 @@ public class NDFSM {
 		newInitialState = new IdentifiedState(nextStateCounter);
 		newStates.add(newInitialState);
 		newStateGroups.put(nextStateCounter++, eps(initialState.getId()));
-		
 		for (int i = 0; i < nextStateCounter; i++) {
 			
-			
 			Set<State> currentGroup = newStateGroups.get(i);
-			
 			
 				for (Character alphabetChar : this.alphabet) 
 				{
@@ -374,12 +370,14 @@ public class NDFSM {
 					for (State s : currentGroup) 
 					{
 						nextGroup.addAll(transitions.at(s, alphabetChar));
+						
 					}
-				
+					nextGroup = groupSetWithEps(nextGroup);
+					
 					if(!newStateGroups.containsValue(nextGroup))
 					{
 						newStates.add(new IdentifiedState(nextStateCounter));
-						newStateGroups.put(nextStateCounter,groupSetWithEps(nextGroup));
+						newStateGroups.put(nextStateCounter,nextGroup);
 						
 						nextStateCounter++;
 					}

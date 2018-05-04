@@ -19,7 +19,7 @@ public class SubmitMain implements Submission, Assignment3 {
 		NDFSM ndfsm = new NDFSM(aNDFSMencoding);
 		DFSM dfsm_converted_from_ndfsm = ndfsm.toDFSM();
 		
-		PrintStream fileStream = new PrintStream("DFSM.txt");
+		PrintStream fileStream = new PrintStream("DFSM Converted from NDFSM.txt");
 		dfsm_converted_from_ndfsm.prettyPrint(fileStream);
 		fileStream.close();
 		
