@@ -1,4 +1,4 @@
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -16,22 +16,23 @@ public class SubmitMain implements Submission, Assignment3 {
 
 	@Override
 	public DFSM convert(String aNDFSMencoding) throws Exception {
-		return new NDFSM(aNDFSMencoding).toDFSM();
+		NDFSM ndfsm = new NDFSM(aNDFSMencoding);
+		DFSM dfsm_converted_from_ndfsm = ndfsm.toDFSM();
+		
+		PrintStream fileStream = new PrintStream("DFSM.txt");
+		dfsm_converted_from_ndfsm.prettyPrint(fileStream);
+		fileStream.close();
+		
+		return dfsm_converted_from_ndfsm;
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, Exception
 	{
 		SubmitMain submitExample = new SubmitMain();
-		File outputFile = new File("NDFSM 2 DFSM Exercise.txt");
-
-		
-		
-		PrintStream fileStream = new PrintStream(outputFile);
+		DFSM dfsm;
 		String aNDFSMencoding = "0 1 2 3 4 5/a b/0, a, 2;0, b, 3;0,, 1;1, a, 2;1, b, 3;1, a, 4;2, a, 2;2, b, 3;2, b, 5;3,, 0;4, a, 1;4, a, 4;4, b, 5;5, a, 4/0/2 5";
-		submitExample.convert(aNDFSMencoding);
+		dfsm = submitExample.convert(aNDFSMencoding);
 	
 		
-		
-		fileStream.close();
 	}
 }
