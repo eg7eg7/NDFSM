@@ -44,14 +44,12 @@ public class SubmitMain implements Submission, Assignment3 {
 		
 		
 		SubmitMain submitExample2 = new SubmitMain();
-		DFSM Dfsm2;
 		String aNDFSMencoding2 = "0 1 2/a b/0, a, 0;0, a, 1;0, b, 2;1, a, 0;1, b, 1;2, b, 0;2, b, 1/0/2";
-		Dfsm2 = submitExample2.convert(aNDFSMencoding2);
+		submitExample2.convert(aNDFSMencoding2);
 		
 		SubmitMain submitExample3 = new SubmitMain();
-		DFSM Dfsm3;
 		String aNDFSMencoding3 = "1 2 3 4/a b c/1, a, 2;1, c, 4;2,, 1;2, b, 3;3, a, 2;4, c, 3;4,, 3/1/3";
-		Dfsm3 = submitExample3.convert(aNDFSMencoding3);
+		submitExample3.convert(aNDFSMencoding3);
 		
 		
 
