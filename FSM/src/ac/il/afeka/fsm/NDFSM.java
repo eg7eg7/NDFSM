@@ -460,10 +460,8 @@ public class NDFSM {
 
 		Set<State> set = new HashSet<>();
 		set.add(s);
-		for (State t : transitions.at(s, Alphabet.EPSILON)) {
-			set.add(t);
+		for (State t : transitions.at(s, Alphabet.EPSILON))
 			set.addAll(calculateEps(t));
-		}
 		return set;
 	}
 

@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import ac.il.afeka.Submission.Submission;
-import ac.il.afeka.fsm.Alphabet;
 import ac.il.afeka.fsm.DFSM;
 import ac.il.afeka.fsm.NDFSM;
 
